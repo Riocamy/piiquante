@@ -7,7 +7,7 @@ const app = express();
 //Import de mongoDB
 const mongoose = require('mongoose');
 
-//Mise en place de la base de données mongoDB
+//Configuration de la base de données mongoDB
 mongoose.connect('mongodb+srv://Riocamy:p6-piiquante@piiquanteserver.5petj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
   { useNewUrlParser: true,
     useUnifiedTopology: true })
