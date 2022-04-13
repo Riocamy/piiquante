@@ -10,7 +10,10 @@ const mongoose = require('mongoose');
 //Import du package body-parser (parse automatiquement les requêtes en JSON)
 const bodyParser = require('body-parser');
 
-//Import de la route utilisateur
+//Import des routes (CRUD)
+const sauceRoutes = require('./routes/sauce');
+
+//Import des routes utilisateur
 const userRoutes = require('./routes/user');
 
 //Configuration de la base de données mongoDB
@@ -22,6 +25,9 @@ mongoose.connect('mongodb+srv://Riocamy:p6-piiquante@piiquanteserver.5petj.mongo
 
 /**** Intégration des Middlewares ****/
 
+//Accès au core de la requête
+app.use(express.json());
+
 //Ajout des Middlewares d'autorisations
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -32,7 +38,7 @@ app.use((req, res, next) => {
 
 //Intégration du bodyparser
 app.use(bodyParser.json());
-
+/*
 //Middlewares provisoires pour exécuter le serveur
 
 app.use((req, res, next) => {
@@ -53,6 +59,9 @@ app.use((req, res, next) => {
 app.use((req, res, next) => {
   console.log('Réponse envoyée avec succès !');
 });
+*/
+//Mise en place de la route Sauce (CRUD)
+app.use('/api/sauce', sauceRoutes);
 
 //Mise en place de la route utilisateur
 app.use('/api/auth', userRoutes);
