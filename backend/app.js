@@ -30,6 +30,9 @@ app.use((req, res, next) => {
   next();
 });
 
+//Intégration du bodyparser
+app.use(bodyParser.json());
+
 //Middlewares provisoires pour exécuter le serveur
 
 app.use((req, res, next) => {

@@ -9,11 +9,11 @@ const User = require('../models/User');
 
 //Controleur pour la création d'un compte utilisateur
 exports.signup = (req, res, next) => {
-  bcrypt.hash(req.body.password, 10)
+  bcrypt.hash(req.body.password, 10) 
     .then(hash => {
       const user = new User({
         email: req.body.email,
-        password: hash
+        password: hash //Cryptage du mot de passe
       });
       user.save() //Pour sauvegarder l'utilisateur dans la base de données
         .then(() => res.status(201).json({ message: 'Utilisateur créé !' }))
