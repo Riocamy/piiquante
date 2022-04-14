@@ -44,33 +44,13 @@ app.use(bodyParser.json());
 
 //Middleware de téléchargement de fichiers (images des sauces)
 app.use('/images', express.static(path.join(__dirname, 'images')));
-/*
-//Middlewares provisoires pour exécuter le serveur
 
-app.use((req, res, next) => {
-  console.log('Requête reçue !');
-  next();
-});
-
-app.use((req, res, next) => {
-  res.status(201);
-  next();
-});
-
-app.use((req, res, next) => {
-  res.json({ message: 'Votre requête a bien été reçue !' });
-  next();
-});
-
-app.use((req, res, next) => {
-  console.log('Réponse envoyée avec succès !');
-});
-*/
 //Mise en place des routes Sauce (CRUD)
 app.use('/api/sauces', sauceRoutes);
 
 //Mise en place des routes utilisateur
 app.use('/api/auth', userRoutes);
+
 
 
 //Export et exploitation de l'API
