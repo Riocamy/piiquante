@@ -10,6 +10,9 @@ const mongoose = require('mongoose');
 //Import du package body-parser (parse automatiquement les requêtes en JSON)
 const bodyParser = require('body-parser');
 
+//Pour mettre en place le chemin d'accès à un fichier téléchargé par l'utilisateur
+const path = require('path');
+
 //Import des routes (CRUD)
 const sauceRoutes = require('./routes/sauce');
 
@@ -38,6 +41,9 @@ app.use((req, res, next) => {
 
 //Intégration du bodyparser
 app.use(bodyParser.json());
+
+//Middleware de téléchargement de fichiers (images des sauces)
+app.use('/images', express.static(path.join(__dirname, 'images')));
 /*
 //Middlewares provisoires pour exécuter le serveur
 
