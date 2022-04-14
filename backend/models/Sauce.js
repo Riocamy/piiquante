@@ -9,10 +9,10 @@ const sauceSchema = mongoose.Schema({
   mainPepper: { type: String, required: true }, //Le principal ingrédient épicé de la sauce
   imageUrl: { type: String, required: true }, //URL de l'image de la sauce téléchargée par l'utilisateur
   heat: { type: Number, required: true }, //Nombre entre 1 et 10 décrivant la sauce
-  likes: { type: Number, required: true }, //Nombre d'utilisateurs qui aiment (= likent) la sauce
-  dislikes: { type: Number, required: true }, //Nombre d'utilisateurs qui n'aiment pas (= dislike) la sauce
-  usersLiked: { type: [ "String <userId>" ], required: true }, //Tableau des userId qui ont aimé la sauce
-  usersDisliked: { type: [ "String <userId>" ], required: true }, //Tableau des userId qui n'ont pas aimé la sauce
+  likes: { type: Number, required: false }, //Nombre d'utilisateurs qui aiment (= like) la sauce
+  dislikes: { type: Number, required: false }, //Nombre d'utilisateurs qui n'aiment pas (= dislike) la sauce
+  usersLiked: { type: [ "String <userId>" ], required: false }, //Tableau des userId qui ont aimé la sauce
+  usersDisliked: { type: [ "String <userId>" ], required: false }, //Tableau des userId qui n'ont pas aimé la sauce
 });
 
 //Pour exporter et exploiter le schéma de données

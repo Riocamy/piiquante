@@ -60,10 +60,10 @@ app.use((req, res, next) => {
   console.log('Réponse envoyée avec succès !');
 });
 */
-//Mise en place de la route Sauce (CRUD)
-app.use('/api/sauce', sauceRoutes);
+//Mise en place des routes Sauce (CRUD)
+app.use('/api/sauces', sauceRoutes);
 
-//Mise en place de la route utilisateur
+//Mise en place des routes utilisateur
 app.use('/api/auth', userRoutes);
 
 

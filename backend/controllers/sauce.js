@@ -6,7 +6,7 @@ const fs = require('fs');
 
 //Controller de la route POST
 exports.createThing = (req, res, next) => {
-  const thingObject = JSON.parse(req.body.thing); //Pour extraire les données JSON de l'objet crée
+  const thingObject = JSON.parse(req.body.sauce); //Pour extraire les données JSON de l'objet crée
   delete thingObject._id;
   const thing = new Thing({
     ...thingObject,
