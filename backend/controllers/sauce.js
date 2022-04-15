@@ -4,7 +4,7 @@ const Sauce = require('../models/Sauce');
 //Import du package file system
 const fs = require('fs');
 
-//Controller de la route POST
+//Controlleur de la route POST
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce); //Pour extraire les données JSON de l'objet crée
   delete sauceObject._id;
@@ -18,7 +18,7 @@ exports.createSauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
-//Controller de la route GET (récupération d'un objet spécifique)
+//Controlleur de la route GET (récupération d'une sauce spécifique)
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({
     _id: req.params.id
@@ -35,7 +35,7 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 
-//Controller de la route PUT
+//Controlleur de la route PUT
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file ? //Vérifie si une image à été téléchargée avec l'objet
     {
@@ -47,7 +47,7 @@ exports.modifySauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
-//Controller de la route DELETE
+//Controlleur de la route DELETE
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id }) //On trouve l'objet dans la base de données
     .then(sauce => { //Quand on le trouve
@@ -61,7 +61,7 @@ exports.deleteSauce = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-//Controller de la route GET (récupération de tous les objets)
+//Controlleur de la route GET (récupération de toutes les sauces)
 exports.getAllSauces = (req, res, next) => {
   Sauce.find().then(
     (sauces) => {
@@ -74,4 +74,72 @@ exports.getAllSauces = (req, res, next) => {
       });
     }
   );
+};
+
+//Contrôleur de la fonction like des sauces
+exports.likeASauce = function (req, res, next) {
+  Sauce.findOne({ _id: req.params.id })
+    .then(function (likedSauce) {
+      switch (req.body.like) {
+        // Like = 1 => L'utilisateur aime la sauce (like = +1)
+        case 1:
+          if (!likedSauce.usersLiked.includes(req.body.userId) && req.body.like === 1) {
+            Sauce.updateOne({ _id: req.params.id },
+              {
+                $inc: { likes: 1 }, $push: { usersLiked: req.body.userId }
+              })
+              .then(function () {
+                res.status(201).json({ message: "La sauce a été likée !" });
+              })
+              .catch(function (error) {
+                res.status(400).json({ error: error });
+              });
+          }
+          break;
+        //L'utilisateur n'aime pas la sauce 
+        case -1:
+          if (!likedSauce.usersDisliked.includes(req.body.userId) && req.body.like === -1) {
+            Sauce.updateOne({ _id: req.params.id },
+              { $inc: { dislikes: 1 }, $push: { usersDisliked: req.body.userId }, }
+            )
+              .then(function () {
+                res.status(201).json({ message: "La sauce a été dislikée !" });
+              })
+              .catch(function (error) {
+                res.status(400).json({ error: error });
+              });
+          }
+          break;
+        //Annulation du like par l'utilisateur
+        case 0:
+          if (likedSauce.usersLiked.includes(req.body.userId)) {
+            Sauce.updateOne({ _id: req.params.id },
+              { $inc: { likes: -1 }, $pull: { usersLiked: req.body.userId }, }
+            )
+              .then(function () {
+                res.status(201).json({ message: "Le like de la sauce a été annulé !" });
+              })
+              .catch(function (error) {
+                res.status(400).json({ error: error });
+              });
+          }
+          //Annulation du dislike 
+          if (likedSauce.usersDisliked.includes(req.body.userId)) {
+            Sauce.updateOne(
+              { _id: req.params.id },
+              { $inc: { dislikes: -1 }, $pull: { usersDisliked: req.body.userId }, }
+            )
+              .then(function () {
+                res.status(201).json({ message: "Le dislike de la sauce a été annulé !" });
+              })
+              .catch(function (error) {
+                res.status(400).json({ error: error });
+              });
+          }
+          break;
+      }
+    })
+    .catch(function (error) {
+      res.status(404).json({ error: error });
+    });
 };
