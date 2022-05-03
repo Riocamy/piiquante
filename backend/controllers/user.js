@@ -1,13 +1,13 @@
-//Import du package de cryptage (hacher le mot de passe)
+// Import du package de cryptage (hacher le mot de passe)
 const bcrypt = require('bcrypt');
 
-//Import du package Jsonwebtoken
+// Import du package Jsonwebtoken
 const jwt = require('jsonwebtoken');
 
-//Import du modèle utilisateur
+// Import du modèle utilisateur
 const User = require('../models/User');
 
-//Controleur pour la création d'un compte utilisateur
+// Controleur pour la création d'un compte utilisateur
 exports.signup = (req, res, next) => {
   bcrypt.hash(req.body.password, 10) 
     .then(hash => {
@@ -22,15 +22,15 @@ exports.signup = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-//Contrôleur pour la connexion à un compte utilisateur
+// Contrôleur pour la connexion à un compte utilisateur
 exports.login = (req, res, next) => {
-  //Pour comparer le nom d'utilisateur, ici l'adresse mail
+  // Pour comparer le nom d'utilisateur, ici l'adresse mail
   User.findOne({ email: req.body.email })
     .then(user => {
       if (!user) { //Si l'utilisateur n'a pas été trouvé
         return res.status(401).json({ error: 'Utilisateur non trouvé !' });
       }
-      //Pour comparer le mot de passe
+      // Pour comparer le mot de passe
       bcrypt.compare(req.body.password, user.password)
         .then(valid => {
           if (!valid) { //Si ce n'est pas valable
@@ -47,6 +47,6 @@ exports.login = (req, res, next) => {
         })
         .catch(error => res.status(500).json({ error }));
     })
-    //Erreur serveur
+    // Erreur serveur
     .catch(error => res.status(500).json({ error }));
 };

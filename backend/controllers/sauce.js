@@ -1,16 +1,16 @@
-//Import du schéma de données
+// Import du schéma de données
 const Sauce = require('../models/Sauce');
 
-//Import du package file system
+// Import du package file system
 const fs = require('fs');
 
-//Controlleur de la route POST
+// Controlleur de la route POST
 exports.createSauce = (req, res, next) => {
   const sauceObject = JSON.parse(req.body.sauce); //Pour extraire les données JSON de l'objet crée
   delete sauceObject._id;
   const sauce = new Sauce({
     ...sauceObject,
-    //Pour générer l'URL de l'image de l'objet crée
+    // Pour générer l'URL de l'image de l'objet crée
     imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
   });
   sauce.save()
@@ -18,7 +18,7 @@ exports.createSauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
-//Controlleur de la route GET (récupération d'une sauce spécifique)
+// Controlleur de la route GET (récupération d'une sauce spécifique)
 exports.getOneSauce = (req, res, next) => {
   Sauce.findOne({
     _id: req.params.id
@@ -35,7 +35,7 @@ exports.getOneSauce = (req, res, next) => {
   );
 };
 
-//Controlleur de la route PUT
+// Controlleur de la route PUT
 exports.modifySauce = (req, res, next) => {
   const sauceObject = req.file ? //Vérifie si une image à été téléchargée avec l'objet
     {
@@ -47,7 +47,7 @@ exports.modifySauce = (req, res, next) => {
     .catch(error => res.status(400).json({ error }));
 };
 
-//Controlleur de la route DELETE
+// Controlleur de la route DELETE
 exports.deleteSauce = (req, res, next) => {
   Sauce.findOne({ _id: req.params.id }) //On trouve l'objet dans la base de données
     .then(sauce => { //Quand on le trouve
@@ -61,7 +61,7 @@ exports.deleteSauce = (req, res, next) => {
     .catch(error => res.status(500).json({ error }));
 };
 
-//Controlleur de la route GET (récupération de toutes les sauces)
+// Controlleur de la route GET (récupération de toutes les sauces)
 exports.getAllSauces = (req, res, next) => {
   Sauce.find().then(
     (sauces) => {
@@ -76,7 +76,7 @@ exports.getAllSauces = (req, res, next) => {
   );
 };
 
-//Contrôleur de la fonction like des sauces
+// Contrôleur de la fonction like des sauces
 exports.likeASauce = function (req, res, next) {
   Sauce.findOne({ _id: req.params.id })
     .then(function (likedSauce) {
@@ -96,7 +96,7 @@ exports.likeASauce = function (req, res, next) {
               });
           }
           break;
-        //L'utilisateur n'aime pas la sauce 
+        // L'utilisateur n'aime pas la sauce 
         case -1:
           if (!likedSauce.usersDisliked.includes(req.body.userId) && req.body.like === -1) {
             Sauce.updateOne({ _id: req.params.id },
@@ -110,7 +110,7 @@ exports.likeASauce = function (req, res, next) {
               });
           }
           break;
-        //Annulation du like par l'utilisateur
+        // Annulation du like par l'utilisateur
         case 0:
           if (likedSauce.usersLiked.includes(req.body.userId)) {
             Sauce.updateOne({ _id: req.params.id },
@@ -123,7 +123,7 @@ exports.likeASauce = function (req, res, next) {
                 res.status(400).json({ error: error });
               });
           }
-          //Annulation du dislike 
+          // Annulation du dislike 
           if (likedSauce.usersDisliked.includes(req.body.userId)) {
             Sauce.updateOne(
               { _id: req.params.id },
